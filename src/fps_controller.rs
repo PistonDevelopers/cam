@@ -20,7 +20,7 @@ bitflags!(flags Keys: u8 {
 })
 
 /// FPS controller settings.
-pub struct FPSControllerSettings {
+pub struct FPSControllerSettings<T=f32> {
     /// Which key to press to move forward.
     pub move_forward_key: keyboard::Key,
     /// Which key to press to move backward.
@@ -35,11 +35,19 @@ pub struct FPSControllerSettings {
     pub fly_down_key: keyboard::Key,
     /// Which key to press to move faster.
     pub move_faster_key: keyboard::Key,
+    /// The horizontal movement speed.
+    ///
+    /// This is measured in units per second.
+    pub speed_horizontal: T,
+    /// The vertical movement speed.
+    ///
+    /// This is measured in units per second.
+    pub speed_vertical: T,
 }
 
-impl FPSControllerSettings {
+impl<T: One> FPSControllerSettings<T> {
     /// Creates new FPS controller settings with defaults.
-    pub fn default() -> FPSControllerSettings {
+    pub fn default() -> FPSControllerSettings<T> {
         FPSControllerSettings {
             move_forward_key: keyboard::W,
             move_backward_key: keyboard::S,
@@ -48,6 +56,8 @@ impl FPSControllerSettings {
             fly_up_key: keyboard::Space,
             fly_down_key: keyboard::LShift,
             move_faster_key: keyboard::LCtrl,
+            speed_horizontal: One::one(),
+            speed_vertical: One::one(),
         }
     }
 }
@@ -55,7 +65,7 @@ impl FPSControllerSettings {
 /// Models a First Person Shooter (FPS) controller.
 pub struct FPSController<T=f32> {
     /// The FPS controller settings.
-    pub settings: FPSControllerSettings,
+    pub settings: FPSControllerSettings<T>,
     /// The yaw angle (in radians).
     pub yaw: T,
     /// The pitch angle (in radians).
@@ -70,7 +80,7 @@ pub struct FPSController<T=f32> {
 
 impl<T: Float + FromPrimitive + Copy + FloatMath> FPSController<T> {
     /// Creates a new FPS controller.
-    pub fn new(settings: FPSControllerSettings) -> FPSController<T> {
+    pub fn new(settings: FPSControllerSettings<T>) -> FPSController<T> {
         let _0: T = Zero::zero();
         FPSController {
             settings: settings,
@@ -84,15 +94,13 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FPSController<T> {
 
     /// Updates camera.
     pub fn update(&self, dt: f64, camera: &mut Camera<T>) {
-        let _3: T = FromPrimitive::from_int(3).unwrap();
-        let _4: T = FromPrimitive::from_int(4).unwrap();
         let dt: T = FromPrimitive::from_f64(dt).unwrap();
-        let dh = dt * self.velocity * _3;
+        let dh = dt * self.velocity * self.settings.speed_horizontal;
         let [dx, dy, dz] = self.direction;
         let (s, c) = (self.yaw.sin(), self.yaw.cos());
         camera.position = [
             camera.position[0] + (s * dx - c * dz) * dh,
-            camera.position[1] + dy * dt * _4,
+            camera.position[1] + dy * dt * self.settings.speed_vertical,
             camera.position[2] + (s * dz + c * dx) * dh
         ];
     }
