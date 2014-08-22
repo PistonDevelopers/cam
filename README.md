@@ -1,7 +1,6 @@
-cam
-===
+# cam [![Build Status](https://travis-ci.org/PistonDevelopers/cam.svg)](https://travis-ci.org/PistonDevelopers/cam)
 
-A Rust library for 3D camera and navigation
+A Rust library for 3D camera and navigation.
 
 Maintainer: @bvssvni
 
