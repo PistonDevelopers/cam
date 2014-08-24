@@ -4,6 +4,7 @@
 //! A first person camera.
 
 use std::num::{One, Zero};
+use std::default::Default;
 use input::keyboard;
 use {
     input,
@@ -45,9 +46,9 @@ pub struct FirstPersonSettings<T=f32> {
     pub speed_vertical: T,
 }
 
-impl<T: One> FirstPersonSettings<T> {
+impl<T: One> Default for FirstPersonSettings<T> {
     /// Creates new first person camera settings with defaults.
-    pub fn default() -> FirstPersonSettings<T> {
+    fn default() -> FirstPersonSettings<T> {
         FirstPersonSettings {
             move_forward_key: keyboard::W,
             move_backward_key: keyboard::S,
