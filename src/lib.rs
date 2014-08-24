@@ -12,11 +12,11 @@ pub use camera::{
     CameraPerspective,
     model_view_projection,
 };
-pub use fps_controller::{
-    FPSController,
-    FPSControllerSettings,
+pub use first_person::{
+    FirstPerson,
+    FirstPersonSettings,
 };
 
 mod camera;
-mod fps_controller;
+mod first_person;
 
