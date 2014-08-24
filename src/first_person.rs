@@ -83,9 +83,7 @@ pub struct FirstPerson<T=f32> {
 impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
     /// Creates a new first person camera.
     pub fn new(
-        x: T, 
-        y: T, 
-        z: T, 
+        position: [T, ..3], 
         settings: FirstPersonSettings<T>
     ) -> FirstPerson<T> {
         let _0: T = Zero::zero();
@@ -95,7 +93,7 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
             pitch: _0,
             keys: Keys::empty(),
             direction: [_0, _0, _0],
-            position: [x, y, z],
+            position: position,
             velocity: One::one(),
         }
     }
