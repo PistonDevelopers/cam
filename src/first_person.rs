@@ -1,7 +1,7 @@
 #![allow(missing_doc)]
 #![allow(dead_code)]
 
-//! A First Person Shooter controller.
+//! A first person camera.
 
 use std::num::{One, Zero};
 use input::keyboard;
@@ -19,8 +19,8 @@ bitflags!(flags Keys: u8 {
     static FlyDown     = 0b00100000
 })
 
-/// FPS controller settings.
-pub struct FPSControllerSettings<T=f32> {
+/// First person camera settings.
+pub struct FirstPersonSettings<T=f32> {
     /// Which key to press to move forward.
     pub move_forward_key: keyboard::Key,
     /// Which key to press to move backward.
@@ -45,10 +45,10 @@ pub struct FPSControllerSettings<T=f32> {
     pub speed_vertical: T,
 }
 
-impl<T: One> FPSControllerSettings<T> {
-    /// Creates new FPS controller settings with defaults.
-    pub fn default() -> FPSControllerSettings<T> {
-        FPSControllerSettings {
+impl<T: One> FirstPersonSettings<T> {
+    /// Creates new first person camera settings with defaults.
+    pub fn default() -> FirstPersonSettings<T> {
+        FirstPersonSettings {
             move_forward_key: keyboard::W,
             move_backward_key: keyboard::S,
             strafe_left_key: keyboard::A,
@@ -62,58 +62,75 @@ impl<T: One> FPSControllerSettings<T> {
     }
 }
 
-/// Models a First Person Shooter (FPS) controller.
-pub struct FPSController<T=f32> {
-    /// The FPS controller settings.
-    pub settings: FPSControllerSettings<T>,
+/// Models a flying first person camera.
+pub struct FirstPerson<T=f32> {
+    /// The first person camera settings.
+    pub settings: FirstPersonSettings<T>,
     /// The yaw angle (in radians).
     pub yaw: T,
     /// The pitch angle (in radians).
     pub pitch: T,
     /// The direction we are heading.
     pub direction: [T, ..3],
+    /// The position of the camera.
+    pub position: [T, ..3],
     /// The velocity we are moving in the direction.
     pub velocity: T,
     /// The keys that are pressed.
     keys: Keys,
 }
 
-impl<T: Float + FromPrimitive + Copy + FloatMath> FPSController<T> {
-    /// Creates a new FPS controller.
-    pub fn new(settings: FPSControllerSettings<T>) -> FPSController<T> {
+impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
+    /// Creates a new first person camera.
+    pub fn new(
+        x: T, 
+        y: T, 
+        z: T, 
+        settings: FirstPersonSettings<T>
+    ) -> FirstPerson<T> {
         let _0: T = Zero::zero();
-        FPSController {
+        FirstPerson {
             settings: settings,
             yaw: _0,
             pitch: _0,
             keys: Keys::empty(),
             direction: [_0, _0, _0],
+            position: [x, y, z],
             velocity: One::one(),
         }
     }
 
-    /// Updates camera.
-    pub fn update(&self, dt: f64, camera: &mut Camera<T>) {
+    /// Computes camera.
+    pub fn camera(&self, dt: f64) -> Camera<T> {
         let dt: T = FromPrimitive::from_f64(dt).unwrap();
         let dh = dt * self.velocity * self.settings.speed_horizontal;
         let [dx, dy, dz] = self.direction;
         let (s, c) = (self.yaw.sin(), self.yaw.cos());
-        camera.position = [
-            camera.position[0] + (s * dx - c * dz) * dh,
-            camera.position[1] + dy * dt * self.settings.speed_vertical,
-            camera.position[2] + (s * dz + c * dx) * dh
-        ];
+        let mut camera = Camera::new(
+            self.position[0] + (s * dx - c * dz) * dh,
+            self.position[1] + dy * dt * self.settings.speed_vertical,
+            self.position[2] + (s * dz + c * dx) * dh
+        );
+        camera.set_yaw_pitch(self.yaw, self.pitch);
+        camera
+    }
+
+    /// Updates the position.
+    pub fn update(&mut self, dt: f64) {
+        let cam = self.camera(dt);
+        self.position = cam.position;
     }
 
     /// Handles game event and updates camera.
-    pub fn input(&mut self, e: &input::InputEvent, camera: &mut Camera<T>) {
-        let &FPSController {
+    pub fn input(&mut self, e: &input::InputEvent) {
+        let &FirstPerson {
             ref mut yaw,
             ref mut pitch,
             ref mut keys,
             ref mut direction,
             ref mut velocity,
             ref settings,
+            ..
         } = self;
 
         let pi: T = Float::pi();
@@ -131,7 +148,6 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FPSController<T> {
                 *yaw = (*yaw - dx / _360 * pi / _4) % (_2 * pi);
                 *pitch = *pitch + dy / _360 * pi / _4;
                 *pitch = (*pitch).min(pi / _2).max(-pi / _2);
-                camera.set_yaw_pitch(*yaw, *pitch);
             },
             input::KeyPress { key, .. } => {
                 let [dx, dy, dz] = *direction;
