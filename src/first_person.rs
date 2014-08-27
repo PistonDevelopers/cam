@@ -4,6 +4,7 @@
 //! A first person camera.
 
 use std::num::{One, Zero};
+use input::{Button, Keyboard};
 use input::keyboard;
 use {
     input,
@@ -21,20 +22,20 @@ bitflags!(flags Keys: u8 {
 
 /// First person camera settings.
 pub struct FirstPersonSettings<T=f32> {
-    /// Which key to press to move forward.
-    pub move_forward_key: keyboard::Key,
-    /// Which key to press to move backward.
-    pub move_backward_key: keyboard::Key,
-    /// Which key to press to strafe left.
-    pub strafe_left_key: keyboard::Key,
-    /// Which key to press to strafe right.
-    pub strafe_right_key: keyboard::Key,
-    /// Which key to press to fly up.
-    pub fly_up_key: keyboard::Key,
-    /// Which key to press to fly down.
-    pub fly_down_key: keyboard::Key,
-    /// Which key to press to move faster.
-    pub move_faster_key: keyboard::Key,
+    /// Which button to press to move forward.
+    pub move_forward_button: input::Button,
+    /// Which button to press to move backward.
+    pub move_backward_button: input::Button,
+    /// Which button to press to strafe left.
+    pub strafe_left_button: input::Button,
+    /// Which button to press to strafe right.
+    pub strafe_right_button: input::Button,
+    /// Which button to press to fly up.
+    pub fly_up_button: input::Button,
+    /// Which button to press to fly down.
+    pub fly_down_button: input::Button,
+    /// Which button to press to move faster.
+    pub move_faster_button: input::Button,
     /// The horizontal movement speed.
     ///
     /// This is measured in units per second.
@@ -47,15 +48,15 @@ pub struct FirstPersonSettings<T=f32> {
 
 impl<T: One> FirstPersonSettings<T> {
     /// Creates new first person camera settings with defaults.
-    pub fn default() -> FirstPersonSettings<T> {
+    pub fn keyboard_wasd() -> FirstPersonSettings<T> {
         FirstPersonSettings {
-            move_forward_key: keyboard::W,
-            move_backward_key: keyboard::S,
-            strafe_left_key: keyboard::A,
-            strafe_right_key: keyboard::D,
-            fly_up_key: keyboard::Space,
-            fly_down_key: keyboard::LShift,
-            move_faster_key: keyboard::LCtrl,
+            move_forward_button: Keyboard(keyboard::W),
+            move_backward_button: Keyboard(keyboard::S),
+            strafe_left_button: Keyboard(keyboard::A),
+            strafe_right_button: Keyboard(keyboard::D),
+            fly_up_button: Keyboard(keyboard::Space),
+            fly_down_button: Keyboard(keyboard::LShift),
+            move_faster_button: Keyboard(keyboard::LCtrl),
             speed_horizontal: One::one(),
             speed_vertical: One::one(),
         }
@@ -140,14 +141,14 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
         let _4: T = FromPrimitive::from_int(4).unwrap();
         let _360: T = FromPrimitive::from_int(360).unwrap();
         match *e {
-            input::MouseRelativeMove { dx, dy, .. } => {
+            input::Move(input::MouseRelative(dx, dy)) => {
                 let dx: T = FromPrimitive::from_f64(dx).unwrap();
                 let dy: T = FromPrimitive::from_f64(dy).unwrap();
                 *yaw = (*yaw - dx / _360 * pi / _4) % (_2 * pi);
                 *pitch = *pitch + dy / _360 * pi / _4;
                 *pitch = (*pitch).min(pi / _2).max(-pi / _2);
             },
-            input::KeyPress { key, .. } => {
+            input::Press(button) => {
                 let [dx, dy, dz] = *direction;
                 let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
                 let set = |k, x: T, y: T, z: T| {
@@ -160,18 +161,18 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
                     *direction = [x, y, z];
                     keys.insert(k);
                 };
-                match key {
-                    x if x == settings.move_forward_key => set(MoveForward, -_1, dy, dz),
-                    x if x == settings.move_backward_key => set(MoveBack, _1, dy, dz),
-                    x if x == settings.strafe_left_key => set(StrafeLeft, dx, dy, _1),
-                    x if x == settings.strafe_right_key => set(StrafeRight, dx, dy, -_1),
-                    x if x == settings.fly_up_key => set(FlyUp, dx, _1, dz),
-                    x if x == settings.fly_down_key => set(FlyDown, dx, -_1, dz),
-                    x if x == settings.move_faster_key => *velocity = _2,
+                match button {
+                    x if x == settings.move_forward_button => set(MoveForward, -_1, dy, dz),
+                    x if x == settings.move_backward_button => set(MoveBack, _1, dy, dz),
+                    x if x == settings.strafe_left_button => set(StrafeLeft, dx, dy, _1),
+                    x if x == settings.strafe_right_button => set(StrafeRight, dx, dy, -_1),
+                    x if x == settings.fly_up_button => set(FlyUp, dx, _1, dz),
+                    x if x == settings.fly_down_button => set(FlyDown, dx, -_1, dz),
+                    x if x == settings.move_faster_button => *velocity = _2,
                     _ => {}
                 }
             },
-            input::KeyRelease { key, .. } => {
+            input::Release(button) => {
                 let [dx, dy, dz] = *direction;
                 let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
                 let set = |x: T, y: T, z: T| {
@@ -187,14 +188,14 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
                     keys.remove(key);
                     if keys.contains(rev_key) { rev_val } else { _0 }
                 };
-                match key {
-                    x if x == settings.move_forward_key => set(release(MoveForward, MoveBack, _1), dy, dz),
-                    x if x == settings.move_backward_key => set(release(MoveBack, MoveForward, -_1), dy, dz),
-                    x if x == settings.strafe_left_key => set(dx, dy, release(StrafeLeft, StrafeRight, -_1)),
-                    x if x == settings.strafe_right_key => set(dx, dy, release(StrafeRight, StrafeLeft, _1)),
-                    x if x == settings.fly_up_key => set(dx, release(FlyUp, FlyDown, -_1), dz),
-                    x if x == settings.fly_down_key => set(dx, release(FlyDown, FlyUp, _1), dz),
-                    x if x == settings.move_faster_key => *velocity = _1,
+                match button {
+                    x if x == settings.move_forward_button => set(release(MoveForward, MoveBack, _1), dy, dz),
+                    x if x == settings.move_backward_button => set(release(MoveBack, MoveForward, -_1), dy, dz),
+                    x if x == settings.strafe_left_button => set(dx, dy, release(StrafeLeft, StrafeRight, -_1)),
+                    x if x == settings.strafe_right_button => set(dx, dy, release(StrafeRight, StrafeLeft, _1)),
+                    x if x == settings.fly_up_button => set(dx, release(FlyUp, FlyDown, -_1), dz),
+                    x if x == settings.fly_down_button => set(dx, release(FlyDown, FlyUp, _1), dz),
+                    x if x == settings.move_faster_button => *velocity = _1,
                     _ => {}
                 }
             },
