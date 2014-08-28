@@ -1,4 +1,4 @@
-# cam [![Build Status](https://travis-ci.org/PistonDevelopers/cam.svg)](https://travis-ci.org/PistonDevelopers/cam)
+# cam [![Build Status](https://travis-ci.org/PistonDevelopers/cam.svg?branch=master)](https://travis-ci.org/PistonDevelopers/cam)
 
 A Rust library for 3D camera and navigation.
 
