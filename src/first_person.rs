@@ -47,7 +47,7 @@ pub struct FirstPersonSettings<T=f32> {
 }
 
 impl<T: One> FirstPersonSettings<T> {
-    /// Creates new first person camera settings with defaults.
+    /// Creates new first person camera settings with wasd defaults.
     pub fn keyboard_wasd() -> FirstPersonSettings<T> {
         FirstPersonSettings {
             move_forward_button: Keyboard(keyboard::W),
@@ -57,6 +57,21 @@ impl<T: One> FirstPersonSettings<T> {
             fly_up_button: Keyboard(keyboard::Space),
             fly_down_button: Keyboard(keyboard::LShift),
             move_faster_button: Keyboard(keyboard::LCtrl),
+            speed_horizontal: One::one(),
+            speed_vertical: One::one(),
+        }
+    }
+
+    /// Creates a new first person camera settings with esdf defaults.
+    pub fn keyboard_esdf() -> FirstPersonSettings<T> {
+        FirstPersonSettings {
+            move_forward_button: Keyboard(keyboard::E),
+            move_backward_button: Keyboard(keyboard::D),
+            strafe_left_button: Keyboard(keyboard::S),
+            strafe_right_button: Keyboard(keyboard::F),
+            fly_up_button: Keyboard(keyboard::Space),
+            fly_down_button: Keyboard(keyboard::Z),
+            move_faster_button: Keyboard(keyboard::LShift),
             speed_horizontal: One::one(),
             speed_vertical: One::one(),
         }
