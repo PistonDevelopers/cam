@@ -12,12 +12,12 @@ use {
 };
 
 bitflags!(flags Keys: u8 {
-    static MoveForward = 0b00000001,
-    static MoveBack    = 0b00000010,
-    static StrafeLeft  = 0b00000100,
-    static StrafeRight = 0b00001000,
-    static FlyUp       = 0b00010000,
-    static FlyDown     = 0b00100000
+    const MoveForward   = 0b00000001,
+    const MoveBack      = 0b00000010,
+    const StrafeLeft    = 0b00000100,
+    const StrafeRight   = 0b00001000,
+    const FlyUp         = 0b00010000,
+    const FlyDown       = 0b00100000
 })
 
 /// First person camera settings.
