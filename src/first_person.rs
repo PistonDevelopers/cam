@@ -4,6 +4,7 @@
 //! A first person camera.
 
 use std::num::{One, Zero};
+use event::GenericEvent;
 use input::{Button, Keyboard};
 use input::keyboard;
 use {
@@ -129,14 +130,15 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
         camera
     }
 
-    /// Updates the position.
-    pub fn update(&mut self, dt: f64) {
-        let cam = self.camera(dt);
-        self.position = cam.position;
-    }
-
     /// Handles game event and updates camera.
-    pub fn input(&mut self, e: &input::InputEvent) {
+    pub fn event<E: GenericEvent>(&mut self, e: &E) {
+        use event::{ MouseRelativeEvent, PressEvent, ReleaseEvent, UpdateEvent };
+
+        e.update(|args| {
+            let cam = self.camera(args.dt);
+            self.position = cam.position;
+        });
+
         let &FirstPerson {
             ref mut yaw,
             ref mut pitch,
@@ -155,79 +157,76 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
         let _3: T = FromPrimitive::from_int(3).unwrap();
         let _4: T = FromPrimitive::from_int(4).unwrap();
         let _360: T = FromPrimitive::from_int(360).unwrap();
-        match *e {
-            input::Move(input::MouseRelative(dx, dy)) => {
-                let dx: T = FromPrimitive::from_f64(dx).unwrap();
-                let dy: T = FromPrimitive::from_f64(dy).unwrap();
-                *yaw = (*yaw - dx / _360 * pi / _4) % (_2 * pi);
-                *pitch = *pitch + dy / _360 * pi / _4;
-                *pitch = (*pitch).min(pi / _2).max(-pi / _2);
-            },
-            input::Press(button) => {
-                let [dx, dy, dz] = *direction;
-                let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
-                let set = |k, x: T, y: T, z: T| {
-                    let (x, z) = (sgn(x), sgn(z));
-                    let (x, z) = if x != _0 && z != _0 {
-                        (x / sqrt2, z / sqrt2)
-                    } else {
-                        (x, z)
-                    };
-                    *direction = [x, y, z];
-                    keys.insert(k);
+        e.mouse_relative(|dx, dy| {
+            let dx: T = FromPrimitive::from_f64(dx).unwrap();
+            let dy: T = FromPrimitive::from_f64(dy).unwrap();
+            *yaw = (*yaw - dx / _360 * pi / _4) % (_2 * pi);
+            *pitch = *pitch + dy / _360 * pi / _4;
+            *pitch = (*pitch).min(pi / _2).max(-pi / _2);
+        });
+        e.press(|button| {
+            let [dx, dy, dz] = *direction;
+            let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
+            let set = |k, x: T, y: T, z: T| {
+                let (x, z) = (sgn(x), sgn(z));
+                let (x, z) = if x != _0 && z != _0 {
+                    (x / sqrt2, z / sqrt2)
+                } else {
+                    (x, z)
                 };
-                match button {
-                    x if x == settings.move_forward_button => 
-                        set(MOVE_FORWARD, -_1, dy, dz),
-                    x if x == settings.move_backward_button => 
-                        set(MOVE_BACKWARD, _1, dy, dz),
-                    x if x == settings.strafe_left_button => 
-                        set(STRAFE_LEFT, dx, dy, _1),
-                    x if x == settings.strafe_right_button => 
-                        set(STRAFE_RIGHT, dx, dy, -_1),
-                    x if x == settings.fly_up_button => 
-                        set(FLY_UP, dx, _1, dz),
-                    x if x == settings.fly_down_button => 
-                        set(FLY_DOWN, dx, -_1, dz),
-                    x if x == settings.move_faster_button => *velocity = _2,
-                    _ => {}
-                }
-            },
-            input::Release(button) => {
-                let [dx, dy, dz] = *direction;
-                let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
-                let set = |x: T, y: T, z: T| {
-                    let (x, z) = (sgn(x), sgn(z));
-                    let (x, z) = if x != _0 && z != _0 {
-                        (x / sqrt2, z / sqrt2)
-                    } else {
-                        (x, z)
-                    };
-                    *direction = [x, y, z];
+                *direction = [x, y, z];
+                keys.insert(k);
+            };
+            match button {
+                x if x == settings.move_forward_button => 
+                    set(MOVE_FORWARD, -_1, dy, dz),
+                x if x == settings.move_backward_button => 
+                    set(MOVE_BACKWARD, _1, dy, dz),
+                x if x == settings.strafe_left_button => 
+                    set(STRAFE_LEFT, dx, dy, _1),
+                x if x == settings.strafe_right_button => 
+                    set(STRAFE_RIGHT, dx, dy, -_1),
+                x if x == settings.fly_up_button => 
+                    set(FLY_UP, dx, _1, dz),
+                x if x == settings.fly_down_button => 
+                    set(FLY_DOWN, dx, -_1, dz),
+                x if x == settings.move_faster_button => *velocity = _2,
+                _ => {}
+            }
+        });
+        e.release(|button| {
+            let [dx, dy, dz] = *direction;
+            let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
+            let set = |x: T, y: T, z: T| {
+                let (x, z) = (sgn(x), sgn(z));
+                let (x, z) = if x != _0 && z != _0 {
+                    (x / sqrt2, z / sqrt2)
+                } else {
+                    (x, z)
                 };
-                let release = |key, rev_key, rev_val| {
-                    keys.remove(key);
-                    if keys.contains(rev_key) { rev_val } else { _0 }
-                };
-                match button {
-                    x if x == settings.move_forward_button => 
-                        set(release(MOVE_FORWARD, MOVE_BACKWARD, _1), dy, dz),
-                    x if x == settings.move_backward_button => 
-                        set(release(MOVE_BACKWARD, MOVE_FORWARD, -_1), dy, dz),
-                    x if x == settings.strafe_left_button => 
-                        set(dx, dy, release(STRAFE_LEFT, STRAFE_RIGHT, -_1)),
-                    x if x == settings.strafe_right_button => 
-                        set(dx, dy, release(STRAFE_RIGHT, STRAFE_LEFT, _1)),
-                    x if x == settings.fly_up_button => 
-                        set(dx, release(FLY_UP, FLY_DOWN, -_1), dz),
-                    x if x == settings.fly_down_button => 
-                        set(dx, release(FLY_DOWN, FLY_UP, _1), dz),
-                    x if x == settings.move_faster_button => *velocity = _1,
-                    _ => {}
-                }
-            },
-            _ => {},
-        }
+                *direction = [x, y, z];
+            };
+            let release = |key, rev_key, rev_val| {
+                keys.remove(key);
+                if keys.contains(rev_key) { rev_val } else { _0 }
+            };
+            match button {
+                x if x == settings.move_forward_button => 
+                    set(release(MOVE_FORWARD, MOVE_BACKWARD, _1), dy, dz),
+                x if x == settings.move_backward_button => 
+                    set(release(MOVE_BACKWARD, MOVE_FORWARD, -_1), dy, dz),
+                x if x == settings.strafe_left_button => 
+                    set(dx, dy, release(STRAFE_LEFT, STRAFE_RIGHT, -_1)),
+                x if x == settings.strafe_right_button => 
+                    set(dx, dy, release(STRAFE_RIGHT, STRAFE_LEFT, _1)),
+                x if x == settings.fly_up_button => 
+                    set(dx, release(FLY_UP, FLY_DOWN, -_1), dz),
+                x if x == settings.fly_down_button => 
+                    set(dx, release(FLY_DOWN, FLY_UP, _1), dz),
+                x if x == settings.move_faster_button => *velocity = _1,
+                _ => {}
+            }
+        });
     }
 }
 

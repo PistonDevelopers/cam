@@ -17,7 +17,7 @@ path = "src/lib.rs"
 
 git = "https://github.com/pistondevelopers/vecmath"
 
-[dependencies.input]
+[dependencies.event]
 
-git = "https://github.com/pistondevelopers/input"
+git = "https://github.com/pistondevelopers/event"
 
