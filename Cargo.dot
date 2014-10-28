@@ -1,0 +1,9 @@
+digraph example3 {
+    N0[label="cam"];
+    N1[label="vecmath"];
+    N2[label="event"];
+    N3[label="input"];
+    N0 -> N1[label=""];
+    N0 -> N2[label=""];
+    N2 -> N3[label=""];
+}
