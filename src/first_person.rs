@@ -1,4 +1,4 @@
-#![allow(missing_doc)]
+#![allow(missing_docs)]
 #![allow(dead_code)]
 
 //! A first person camera.
