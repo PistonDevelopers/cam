@@ -3,7 +3,7 @@
 
 //! A first person camera.
 
-use std::num::{One, Zero};
+use std::num::{Float, FloatMath};
 use event::GenericEvent;
 use input::{Button, Keyboard};
 use input::keyboard;
@@ -47,7 +47,7 @@ pub struct FirstPersonSettings<T=f32> {
     pub speed_vertical: T,
 }
 
-impl<T: One> FirstPersonSettings<T> {
+impl<T: Float> FirstPersonSettings<T> {
     /// Creates new first person camera settings with wasd defaults.
     pub fn keyboard_wasd() -> FirstPersonSettings<T> {
         FirstPersonSettings {
@@ -58,8 +58,8 @@ impl<T: One> FirstPersonSettings<T> {
             fly_up_button: Keyboard(keyboard::Space),
             fly_down_button: Keyboard(keyboard::LShift),
             move_faster_button: Keyboard(keyboard::LCtrl),
-            speed_horizontal: One::one(),
-            speed_vertical: One::one(),
+            speed_horizontal: Float::one(),
+            speed_vertical: Float::one(),
         }
     }
 
@@ -73,8 +73,8 @@ impl<T: One> FirstPersonSettings<T> {
             fly_up_button: Keyboard(keyboard::Space),
             fly_down_button: Keyboard(keyboard::Z),
             move_faster_button: Keyboard(keyboard::LShift),
-            speed_horizontal: One::one(),
-            speed_vertical: One::one(),
+            speed_horizontal: Float::one(),
+            speed_vertical: Float::one(),
         }
     }
 }
@@ -103,7 +103,7 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
         position: [T, ..3], 
         settings: FirstPersonSettings<T>
     ) -> FirstPerson<T> {
-        let _0: T = Zero::zero();
+        let _0: T = Float::zero();
         FirstPerson {
             settings: settings,
             yaw: _0,
@@ -111,7 +111,7 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
             keys: Keys::empty(),
             direction: [_0, _0, _0],
             position: position,
-            velocity: One::one(),
+            velocity: Float::one(),
         }
     }
 
@@ -151,8 +151,8 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
 
         let pi: T = Float::pi();
         let sqrt2: T = Float::sqrt2();
-        let _0: T = Zero::zero();
-        let _1: T = One::one();
+        let _0: T = Float::zero();
+        let _1: T = Float::one();
         let _2: T = FromPrimitive::from_int(2).unwrap();
         let _3: T = FromPrimitive::from_int(3).unwrap();
         let _4: T = FromPrimitive::from_int(4).unwrap();

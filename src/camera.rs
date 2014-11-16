@@ -1,7 +1,7 @@
 
 //! A 3D camera.
 
-use std::num::{Zero, One};
+use std::num::{Float, FloatMath};
 use vecmath::{
     Vector3,
     Matrix4,
@@ -49,8 +49,8 @@ impl<T: Float + FloatMath + Copy> Camera<T> {
     ///
     /// Places the camera at [x, y, z], looking towards pozitive z.
     pub fn new(x: T, y: T, z: T) -> Camera<T> {
-        let _0 = Zero::zero();
-        let _1 = One::one();
+        let _0 = Float::zero();
+        let _1 = Float::one();
         Camera {
             position: [x, y, z],
             right:   [_1, _0, _0],
@@ -67,12 +67,12 @@ impl<T: Float + FloatMath + Copy> Camera<T> {
         let r = self.right;
         let u = self.up;
         let f = self.forward;
-        let _0 = Zero::zero();
+        let _0 = Float::zero();
         [
             [r[0], u[0], f[0], _0],
             [r[1], u[1], f[1], _0],
             [r[2], u[2], f[2], _0],
-            [-vec3_dot(r, p), -vec3_dot(u, p), -vec3_dot(f, p), One::one()]
+            [-vec3_dot(r, p), -vec3_dot(u, p), -vec3_dot(f, p), Float::one()]
         ]
     }
 
@@ -95,11 +95,11 @@ impl<T: Float + FloatMath + Copy> Camera<T> {
     }
 }
 
-impl<T: Copy + Num + FloatMath + FromPrimitive> CameraPerspective<T> {
+impl<T: Copy + Float + FloatMath + FromPrimitive> CameraPerspective<T> {
     /// Computes a projection matrix for the camera perspective.
     pub fn projection(&self) -> Matrix4<T> {
-        let _0: T = Zero::zero();
-        let _1: T = One::one();
+        let _0: T = Float::zero();
+        let _1: T = Float::one();
         let _2: T = _1 + _1;
         let pi: T = Float::pi();
         let _360: T = FromPrimitive::from_int(360).unwrap();
