@@ -4,6 +4,8 @@ A Rust library for 3D camera and navigation.
 
 Maintainer: @bvssvni
 
+[How to contribute](https://github.com/PistonDevelopers/piston/blob/master/CONTRIBUTING.md)
+
 ## Goals
 
 - 3D camera management for the Piston game engine
