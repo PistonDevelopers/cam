@@ -121,11 +121,11 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
         let dh = dt * self.velocity * self.settings.speed_horizontal;
         let [dx, dy, dz] = self.direction;
         let (s, c) = (self.yaw.sin(), self.yaw.cos());
-        let mut camera = Camera::new(
+        let mut camera = Camera::new([
             self.position[0] + (s * dx - c * dz) * dh,
             self.position[1] + dy * dt * self.settings.speed_vertical,
             self.position[2] + (s * dz + c * dx) * dh
-        );
+        ]);
         camera.set_yaw_pitch(self.yaw, self.pitch);
         camera
     }
