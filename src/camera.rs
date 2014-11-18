@@ -48,11 +48,11 @@ impl<T: Float + FloatMath + Copy> Camera<T> {
     /// Constructs a new camera.
     ///
     /// Places the camera at [x, y, z], looking towards pozitive z.
-    pub fn new(x: T, y: T, z: T) -> Camera<T> {
+    pub fn new(position: Vector3<T>) -> Camera<T> {
         let _0 = Float::zero();
         let _1 = Float::one();
         Camera {
-            position: [x, y, z],
+            position: position,
             right:   [_1, _0, _0],
             up:      [_0, _1, _0],
             forward: [_0, _0, _1]
@@ -77,8 +77,8 @@ impl<T: Float + FloatMath + Copy> Camera<T> {
     }
 
     /// Orients the camera to look at a point.
-    pub fn look_at(&mut self, x: T, y: T, z: T) {
-        self.forward = vec3_normalized_sub(self.position, [x, y, z]);
+    pub fn look_at(&mut self, point: Vector3<T>) {
+        self.forward = vec3_normalized_sub(self.position, point);
         self.update_right();
     }
 
