@@ -5,12 +5,12 @@
 
 use std::num::{Float, FloatMath};
 use event::GenericEvent;
-use input::{Button, Keyboard};
-use input::keyboard;
+use input::Button;
 use {
     input,
     Camera,
 };
+use vecmath::consts::Radians;
 
 bitflags!(flags Keys: u8 {
     const MOVE_FORWARD  = 0b00000001,
@@ -50,14 +50,17 @@ pub struct FirstPersonSettings<T=f32> {
 impl<T: Float> FirstPersonSettings<T> {
     /// Creates new first person camera settings with wasd defaults.
     pub fn keyboard_wasd() -> FirstPersonSettings<T> {
+        use input::Button::Keyboard;
+        use input::keyboard::Key;        
+
         FirstPersonSettings {
-            move_forward_button: Keyboard(keyboard::W),
-            move_backward_button: Keyboard(keyboard::S),
-            strafe_left_button: Keyboard(keyboard::A),
-            strafe_right_button: Keyboard(keyboard::D),
-            fly_up_button: Keyboard(keyboard::Space),
-            fly_down_button: Keyboard(keyboard::LShift),
-            move_faster_button: Keyboard(keyboard::LCtrl),
+            move_forward_button: Keyboard(Key::W),
+            move_backward_button: Keyboard(Key::S),
+            strafe_left_button: Keyboard(Key::A),
+            strafe_right_button: Keyboard(Key::D),
+            fly_up_button: Keyboard(Key::Space),
+            fly_down_button: Keyboard(Key::LShift),
+            move_faster_button: Keyboard(Key::LCtrl),
             speed_horizontal: Float::one(),
             speed_vertical: Float::one(),
         }
@@ -65,14 +68,17 @@ impl<T: Float> FirstPersonSettings<T> {
 
     /// Creates a new first person camera settings with esdf defaults.
     pub fn keyboard_esdf() -> FirstPersonSettings<T> {
+        use input::Button::Keyboard;
+        use input::keyboard::Key;        
+
         FirstPersonSettings {
-            move_forward_button: Keyboard(keyboard::E),
-            move_backward_button: Keyboard(keyboard::D),
-            strafe_left_button: Keyboard(keyboard::S),
-            strafe_right_button: Keyboard(keyboard::F),
-            fly_up_button: Keyboard(keyboard::Space),
-            fly_down_button: Keyboard(keyboard::Z),
-            move_faster_button: Keyboard(keyboard::LShift),
+            move_forward_button: Keyboard(Key::E),
+            move_backward_button: Keyboard(Key::D),
+            strafe_left_button: Keyboard(Key::S),
+            strafe_right_button: Keyboard(Key::F),
+            fly_up_button: Keyboard(Key::Space),
+            fly_down_button: Keyboard(Key::Z),
+            move_faster_button: Keyboard(Key::LShift),
             speed_horizontal: Float::one(),
             speed_vertical: Float::one(),
         }
@@ -97,7 +103,9 @@ pub struct FirstPerson<T=f32> {
     keys: Keys,
 }
 
-impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
+impl<T: Float + FromPrimitive + Copy + FloatMath + Radians>
+FirstPerson<T> {
+
     /// Creates a new first person camera.
     pub fn new(
         position: [T, ..3], 
@@ -149,7 +157,7 @@ impl<T: Float + FromPrimitive + Copy + FloatMath> FirstPerson<T> {
             ..
         } = self;
 
-        let pi: T = Float::pi();
+        let pi: T = Radians::_180();
         let sqrt2: T = Float::sqrt2();
         let _0: T = Float::zero();
         let _1: T = Float::one();
