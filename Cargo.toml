@@ -1,23 +1,28 @@
 [package]
 
-name = "cam"
+name = "piston3d-cam"
 version = "0.0.0"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "eddyb"
 ]
-tags = []
+tags = ["cam", "3d", "perspective", "first-person"]
+description = "A library for 3D camera and navigation"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/pistondevelopers/cam.git"
+homepage = "https://github.com/pistondevelopers/cam"
 
 [lib]
 
 name = "cam"
 path = "src/lib.rs"
 
+[dependencies.pistoncore-event]
+
+git = "https://github.com/pistondevelopers/event"
+
 [dependencies.vecmath]
 
 git = "https://github.com/pistondevelopers/vecmath"
-
-[dependencies.event]
-
-git = "https://github.com/pistondevelopers/event"
 
