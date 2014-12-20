@@ -6,7 +6,7 @@ authors = [
     "bvssvni <bvssvni@gmail.com>",
     "eddyb"
 ]
-tags = ["cam", "3d", "perspective", "first-person"]
+keywords = ["cam", "3d", "perspective", "first-person"]
 description = "A library for 3D camera and navigation"
 license = "MIT"
 readme = "README.md"
@@ -25,4 +25,3 @@ git = "https://github.com/pistondevelopers/event"
 [dependencies.vecmath]
 
 git = "https://github.com/pistondevelopers/vecmath"
-
