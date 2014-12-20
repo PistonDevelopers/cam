@@ -19,7 +19,7 @@ bitflags!(flags Keys: u8 {
     const STRAFE_RIGHT  = 0b00001000,
     const FLY_UP        = 0b00010000,
     const FLY_DOWN      = 0b00100000
-})
+});
 
 /// First person camera settings.
 pub struct FirstPersonSettings<T=f32> {
