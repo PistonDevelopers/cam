@@ -7,9 +7,6 @@ os:
 env:
     global:
         - secure: lArE1cuRyp8OVugatua33YfPqzB8tj+5wq+MvCns9Bah2Uz8CpVgQqFIxGi1aIWQsvOoGMeI4EGNwWnLPm66quEwCinl5gmg+AMcHJygjSi3T28SSjvEWyfunBvBe2X+sQ2woLM2Bvl5bOuxZ9Y4giNcjLXCVFxaqcUOH4U9RIc=
-before_script:
-    - rustc -v
-    - cargo -V
 script:
     - cargo build -v
     - cargo test -v
