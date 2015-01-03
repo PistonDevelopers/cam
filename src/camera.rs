@@ -1,7 +1,7 @@
 
 //! A 3D camera.
 
-use std::num::{Float, FloatMath};
+use std::num::{Float, FloatMath, FromPrimitive};
 use vecmath::{
     Vector3,
     Matrix4,

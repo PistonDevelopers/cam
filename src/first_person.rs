@@ -3,7 +3,7 @@
 
 //! A first person camera.
 
-use std::num::{Float, FloatMath};
+use std::num::{Float, FloatMath, FromPrimitive};
 use event::GenericEvent;
 use input::Button;
 use {
@@ -94,9 +94,9 @@ pub struct FirstPerson<T=f32> {
     /// The pitch angle (in radians).
     pub pitch: T,
     /// The direction we are heading.
-    pub direction: [T, ..3],
+    pub direction: [T; 3],
     /// The position of the camera.
-    pub position: [T, ..3],
+    pub position: [T; 3],
     /// The velocity we are moving in the direction.
     pub velocity: T,
     /// The keys that are pressed.
@@ -108,7 +108,7 @@ FirstPerson<T> {
 
     /// Creates a new first person camera.
     pub fn new(
-        position: [T, ..3], 
+        position: [T; 3], 
         settings: FirstPersonSettings<T>
     ) -> FirstPerson<T> {
         let _0: T = Float::zero();
