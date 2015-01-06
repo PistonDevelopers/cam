@@ -158,7 +158,7 @@ FirstPerson<T> {
         } = self;
 
         let pi: T = Radians::_180();
-        let sqrt2: T = Float::sqrt2();
+        let sqrt2: T = Float::sqrt(FromPrimitive::from_f64(2f64).unwrap());
         let _0: T = Float::zero();
         let _1: T = Float::one();
         let _2: T = FromPrimitive::from_int(2).unwrap();
