@@ -1,7 +1,7 @@
 
 //! A 3D camera.
 
-use std::num::{Float, FloatMath, FromPrimitive};
+use std::num::{Float, FromPrimitive};
 use vecmath::{
     Vector3,
     Matrix4,
@@ -45,7 +45,7 @@ pub struct CameraPerspective<T=f32> {
     pub aspect_ratio: T,
 }
 
-impl<T: Float + FloatMath + Copy> Camera<T> {
+impl<T: Float + Copy> Camera<T> {
     /// Constructs a new camera.
     ///
     /// Places the camera at [x, y, z], looking towards pozitive z.
@@ -96,7 +96,7 @@ impl<T: Float + FloatMath + Copy> Camera<T> {
     }
 }
 
-impl<T: Copy + Float + FloatMath + FromPrimitive + Radians> 
+impl<T: Copy + Float + FromPrimitive + Radians> 
 CameraPerspective<T> {
     /// Computes a projection matrix for the camera perspective.
     pub fn projection(&self) -> Matrix4<T> {
