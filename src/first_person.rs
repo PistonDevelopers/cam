@@ -3,7 +3,7 @@
 
 //! A first person camera.
 
-use std::num::{Float, FloatMath, FromPrimitive};
+use std::num::{Float, FromPrimitive};
 use event::GenericEvent;
 use input::Button;
 use {
@@ -103,7 +103,7 @@ pub struct FirstPerson<T=f32> {
     keys: Keys,
 }
 
-impl<T: Float + FromPrimitive + Copy + FloatMath + Radians>
+impl<T: Float + FromPrimitive + Copy + Radians>
 FirstPerson<T> {
 
     /// Creates a new first person camera.
@@ -147,7 +147,7 @@ FirstPerson<T> {
             self.position = cam.position;
         });
 
-        let &FirstPerson {
+        let &mut FirstPerson {
             ref mut yaw,
             ref mut pitch,
             ref mut keys,
@@ -174,8 +174,8 @@ FirstPerson<T> {
         });
         e.press(|button| {
             let [dx, dy, dz] = *direction;
-            let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
-            let set = |k, x: T, y: T, z: T| {
+            let sgn = |&: x: T| if x == _0 { _0 } else { x.signum() };
+            let mut set = |&mut: k, x: T, y: T, z: T| {
                 let (x, z) = (sgn(x), sgn(z));
                 let (x, z) = if x != _0 && z != _0 {
                     (x / sqrt2, z / sqrt2)
@@ -204,8 +204,8 @@ FirstPerson<T> {
         });
         e.release(|button| {
             let [dx, dy, dz] = *direction;
-            let sgn = |x: T| if x == _0 { _0 } else { x.signum() };
-            let set = |x: T, y: T, z: T| {
+            let sgn = |&: x: T| if x == _0 { _0 } else { x.signum() };
+            let mut set = |&mut: x: T, y: T, z: T| {
                 let (x, z) = (sgn(x), sgn(z));
                 let (x, z) = if x != _0 && z != _0 {
                     (x / sqrt2, z / sqrt2)
@@ -214,7 +214,7 @@ FirstPerson<T> {
                 };
                 *direction = [x, y, z];
             };
-            let release = |key, rev_key, rev_val| {
+            let mut release = |&mut: key, rev_key, rev_val| {
                 keys.remove(key);
                 if keys.contains(rev_key) { rev_val } else { _0 }
             };
