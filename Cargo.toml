@@ -18,6 +18,10 @@ homepage = "https://github.com/pistondevelopers/cam"
 name = "cam"
 path = "src/lib.rs"
 
+[dependencies]
+
+bitflags = "*"
+
 [dependencies.pistoncore-event]
 
 git = "https://github.com/pistondevelopers/event"
@@ -25,3 +29,7 @@ git = "https://github.com/pistondevelopers/event"
 [dependencies.vecmath]
 
 git = "https://github.com/pistondevelopers/vecmath"
+
+[dependencies.pistoncore-input]
+
+git = "https://github.com/PistonDevelopers/input"
