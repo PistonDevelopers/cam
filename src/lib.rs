@@ -4,6 +4,7 @@
 
 //! A library for 3D camera and navigation.
 
+#[macro_use] extern crate rustc_bitflags;
 extern crate event;
 extern crate input;
 extern crate vecmath;
