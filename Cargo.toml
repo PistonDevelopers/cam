@@ -19,17 +19,17 @@ name = "cam"
 path = "src/lib.rs"
 
 [dependencies]
-
 bitflags = "*"
 
 [dependencies.pistoncore-event]
-
 git = "https://github.com/pistondevelopers/event"
+#version = "0.0.5"
 
 [dependencies.vecmath]
-
 git = "https://github.com/pistondevelopers/vecmath"
+#version = "0.0.3"
 
 [dependencies.pistoncore-input]
-
 git = "https://github.com/PistonDevelopers/input"
+#version = "0.0.5"
+
