@@ -96,7 +96,7 @@ impl<T: Float + Copy> Camera<T> {
     }
 }
 
-impl<T: Copy + Float + FromPrimitive + Radians> 
+impl<T: Copy + Float + FromPrimitive + Radians>
 CameraPerspective<T> {
     /// Computes a projection matrix for the camera perspective.
     pub fn projection(&self) -> Matrix4<T> {
