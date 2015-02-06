@@ -51,7 +51,7 @@ impl<T: Float> FirstPersonSettings<T> {
     /// Creates new first person camera settings with wasd defaults.
     pub fn keyboard_wasd() -> FirstPersonSettings<T> {
         use input::Button::Keyboard;
-        use input::keyboard::Key;        
+        use input::keyboard::Key;
 
         FirstPersonSettings {
             move_forward_button: Keyboard(Key::W),
@@ -69,7 +69,7 @@ impl<T: Float> FirstPersonSettings<T> {
     /// Creates a new first person camera settings with esdf defaults.
     pub fn keyboard_esdf() -> FirstPersonSettings<T> {
         use input::Button::Keyboard;
-        use input::keyboard::Key;        
+        use input::keyboard::Key;
 
         FirstPersonSettings {
             move_forward_button: Keyboard(Key::E),
@@ -108,7 +108,7 @@ FirstPerson<T> {
 
     /// Creates a new first person camera.
     pub fn new(
-        position: [T; 3], 
+        position: [T; 3],
         settings: FirstPersonSettings<T>
     ) -> FirstPerson<T> {
         let _0: T = Float::zero();
@@ -186,17 +186,17 @@ FirstPerson<T> {
                 keys.insert(k);
             };
             match button {
-                x if x == settings.move_forward_button => 
+                x if x == settings.move_forward_button =>
                     set(MOVE_FORWARD, -_1, dy, dz),
-                x if x == settings.move_backward_button => 
+                x if x == settings.move_backward_button =>
                     set(MOVE_BACKWARD, _1, dy, dz),
-                x if x == settings.strafe_left_button => 
+                x if x == settings.strafe_left_button =>
                     set(STRAFE_LEFT, dx, dy, _1),
-                x if x == settings.strafe_right_button => 
+                x if x == settings.strafe_right_button =>
                     set(STRAFE_RIGHT, dx, dy, -_1),
-                x if x == settings.fly_up_button => 
+                x if x == settings.fly_up_button =>
                     set(FLY_UP, dx, _1, dz),
-                x if x == settings.fly_down_button => 
+                x if x == settings.fly_down_button =>
                     set(FLY_DOWN, dx, -_1, dz),
                 x if x == settings.move_faster_button => *velocity = _2,
                 _ => {}
@@ -219,17 +219,17 @@ FirstPerson<T> {
                 if keys.contains(rev_key) { rev_val } else { _0 }
             };
             match button {
-                x if x == settings.move_forward_button => 
+                x if x == settings.move_forward_button =>
                     set(release(MOVE_FORWARD, MOVE_BACKWARD, _1), dy, dz),
-                x if x == settings.move_backward_button => 
+                x if x == settings.move_backward_button =>
                     set(release(MOVE_BACKWARD, MOVE_FORWARD, -_1), dy, dz),
-                x if x == settings.strafe_left_button => 
+                x if x == settings.strafe_left_button =>
                     set(dx, dy, release(STRAFE_LEFT, STRAFE_RIGHT, -_1)),
-                x if x == settings.strafe_right_button => 
+                x if x == settings.strafe_right_button =>
                     set(dx, dy, release(STRAFE_RIGHT, STRAFE_LEFT, _1)),
-                x if x == settings.fly_up_button => 
+                x if x == settings.fly_up_button =>
                     set(dx, release(FLY_UP, FLY_DOWN, -_1), dz),
-                x if x == settings.fly_down_button => 
+                x if x == settings.fly_down_button =>
                     set(dx, release(FLY_DOWN, FLY_UP, _1), dz),
                 x if x == settings.move_faster_button => *velocity = _1,
                 _ => {}
