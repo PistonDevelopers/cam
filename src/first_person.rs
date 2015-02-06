@@ -175,7 +175,7 @@ FirstPerson<T> {
         e.press(|button| {
             let [dx, dy, dz] = *direction;
             let sgn = |&: x: T| if x == _0 { _0 } else { x.signum() };
-            let mut set = |&mut: k, x: T, y: T, z: T| {
+            let mut set = |k, x: T, y: T, z: T| {
                 let (x, z) = (sgn(x), sgn(z));
                 let (x, z) = if x != _0 && z != _0 {
                     (x / sqrt2, z / sqrt2)
@@ -205,7 +205,7 @@ FirstPerson<T> {
         e.release(|button| {
             let [dx, dy, dz] = *direction;
             let sgn = |&: x: T| if x == _0 { _0 } else { x.signum() };
-            let mut set = |&mut: x: T, y: T, z: T| {
+            let mut set = |x: T, y: T, z: T| {
                 let (x, z) = (sgn(x), sgn(z));
                 let (x, z) = if x != _0 && z != _0 {
                     (x / sqrt2, z / sqrt2)
@@ -214,7 +214,7 @@ FirstPerson<T> {
                 };
                 *direction = [x, y, z];
             };
-            let mut release = |&mut: key, rev_key, rev_val| {
+            let mut release = |key, rev_key, rev_val| {
                 keys.remove(key);
                 if keys.contains(rev_key) { rev_val } else { _0 }
             };
