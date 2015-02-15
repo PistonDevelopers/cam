@@ -11,6 +11,8 @@ use vecmath::{
 };
 use vecmath::col_mat4_mul as mul;
 use vecmath::consts::Radians;
+use cgmath::{ Quaternion, Rotation, FixedArray, BaseFloat };
+use cgmath::Vector3 as CgVector3; 
 
 /// Computes a model view projection matrix.
 pub fn model_view_projection<T: Float + Copy>(
@@ -88,6 +90,19 @@ impl<T: Float + Copy> Camera<T> {
         let (y_s, y_c, p_s, p_c) = (yaw.sin(), yaw.cos(), pitch.sin(), pitch.cos());
         self.forward = [y_s * p_c, p_s, y_c * p_c];
         self.up = [y_s * -p_s, p_c, y_c * -p_s];
+        self.update_right();
+    }
+
+    /// Sets forward, up, and right vectors from a Quaternion rotation
+    /// relative to the positive z-axis
+    pub fn set_rotation(&mut self, rotation: &Quaternion<T>)
+        where 
+            T: BaseFloat + 'static
+    {
+        let forward = CgVector3::unit_z();
+        let up = CgVector3::unit_y();
+        self.forward = rotation.rotate_vector(&forward).into_fixed();
+        self.up = rotation.rotate_vector(&up).into_fixed();
         self.update_right();
     }
 

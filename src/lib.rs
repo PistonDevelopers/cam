@@ -9,6 +9,7 @@ extern crate bitflags;
 extern crate event;
 extern crate input;
 extern crate vecmath;
+extern crate cgmath;
 
 pub use camera::{
     Camera,
@@ -20,6 +21,12 @@ pub use first_person::{
     FirstPersonSettings,
 };
 
+pub use orbit_zoom_camera::{
+    OrbitZoomCamera,
+    OrbitZoomCameraSettings,
+};
+
 mod camera;
 mod first_person;
+mod orbit_zoom_camera;
 
