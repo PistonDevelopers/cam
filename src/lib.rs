@@ -9,7 +9,7 @@ extern crate bitflags;
 extern crate event;
 extern crate input;
 extern crate vecmath;
-extern crate cgmath;
+extern crate quaternion;
 
 pub use camera::{
     Camera,

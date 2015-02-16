@@ -1,16 +1,23 @@
-//! 
+//!
 //! A 3dsMax / Blender style camera that orbits about a target position
 //!
 
 use event::GenericEvent;
 use std::ops::Mul;
-use cgmath::*;
+use vecmath::{
+    Vector3,
+    vec3_add,
+    vec3_scale
+};
+
+use quaternion;
+use quaternion::{Quaternion, quaternion_id, quaternion_from_axis_angle, rotate_vector};
+
 use { input, Camera };
 
 use input::Button::{Keyboard, Mouse};
 use input::keyboard::Key;
 use input::mouse::MouseButton;
-
 
 bitflags!(flags Keys: u8 {
     const ZOOM  = 0b00000001,
@@ -63,18 +70,18 @@ impl OrbitZoomCameraSettings {
 
 ///
 /// A 3dsMax / Blender-style camera that orbits around a target point
-/// 
+///
 pub struct OrbitZoomCamera<T=f32> {
 
     /// origin of camera rotation
     pub target: Vector3<T>,
 
-    /// Rotation of camera relative to world-space positive z-axis
+    /// Rotation of camera
     pub rotation: Quaternion<T>,
 
     /// Pitch up/down from target
     pub pitch: T,
-    
+
     /// Yaw left/right from target
     pub yaw: T,
 
@@ -93,11 +100,11 @@ impl OrbitZoomCamera {
 
     ///
     /// Create a new OrbitZoomCamera targeting the given coordinates
-    /// 
+    ///
     pub fn new(target: [f32; 3], settings: OrbitZoomCameraSettings) -> OrbitZoomCamera {
-        OrbitZoomCamera { 
-            target: Vector3::new(target[0], target[1], target[2]),
-            rotation: Quaternion::identity(),
+        OrbitZoomCamera {
+            target: target,
+            rotation: quaternion_id(),
             distance: 10.0,
             pitch: 0f32,
             yaw: 0f32,
@@ -110,11 +117,9 @@ impl OrbitZoomCamera {
     /// Return a Camera for the current OrbitZoomCamera configuration
     ///
     pub fn camera(&self, dt: f64) -> Camera<f32> {
-        let target_to_camera = self.rotation.rotate_vector(&Vector3::new(0.0, 0.0, self.distance));
-        let mut camera = Camera::new([self.target[0] + target_to_camera.x,
-                                      self.target[1] + target_to_camera.y,
-                                      self.target[2] + target_to_camera.z]);
-        camera.set_rotation(&self.rotation);
+        let target_to_camera = rotate_vector(self.rotation, [0.0, 0.0, self.distance]);
+        let mut camera = Camera::new(vec3_add(self.target, target_to_camera));
+        camera.set_rotation(self.rotation);
         camera
     }
 
@@ -128,9 +133,13 @@ impl OrbitZoomCamera {
             // Pan target position along plane normal to camera direction
             let dx = dx * self.settings.pan_speed;
             let dy = dy * self.settings.pan_speed;
-            let right = self.rotation.rotate_vector(&Vector3::unit_x());
-            let up = self.rotation.rotate_vector(&Vector3::unit_y());
-            self.target = self.target + up.mul_s(dy) + right.mul_s(dx);
+
+            let right = rotate_vector(self.rotation, [1.0f32, 0.0f32, 0.0f32]);
+            let up = rotate_vector(self.rotation, [0.0f32, 1.0f32, 0.0f32]);
+            self.target = vec3_add(
+                vec3_add(self.target, vec3_scale(up, dy)),
+                vec3_scale(right,dx)
+            );
 
         } else if self.keys.contains(ZOOM) {
 
@@ -145,13 +154,17 @@ impl OrbitZoomCamera {
 
             self.yaw = self.yaw + dx;
             self.pitch = self.pitch + dy;
-            self.rotation = Rotation3::from_euler(-rad(self.yaw), rad(0f32), rad(self.pitch));
+            self.rotation = quaternion::mul(
+                quaternion_from_axis_angle([0.0, 1.0, 0.0], self.yaw),
+                quaternion_from_axis_angle([1.0, 0.0, 0.0], self.pitch)
+            );
+
         }
     }
 
     ///
     /// Respond to scroll and key press/release events
-    /// 
+    ///
     pub fn event<E: GenericEvent>(&mut self, e: &E) {
 
         use event::{ MouseRelativeEvent, MouseScrollEvent, PressEvent, ReleaseEvent };

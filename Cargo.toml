@@ -33,6 +33,6 @@ git = "https://github.com/pistondevelopers/vecmath"
 git = "https://github.com/PistonDevelopers/input"
 #version = "0.0.5"
 
-[dependencies.cgmath]
-git = "https://github.com/bjz/cgmath-rs"
-#version = "0.0.4"
+[dependencies.quaternion]
+git = "https://github.com/PistonDevelopers/quaternion.git"
+#version = "0.0.2"
