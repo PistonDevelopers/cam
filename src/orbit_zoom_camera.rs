@@ -13,7 +13,7 @@ use vecmath::{
 };
 
 use quaternion;
-use quaternion::{Quaternion, quaternion_id, quaternion_from_axis_angle, rotate_vector};
+use quaternion::{ Quaternion };
 
 use { input, Camera };
 
@@ -107,7 +107,7 @@ OrbitZoomCamera<T> {
     pub fn new(target: [T; 3], settings: OrbitZoomCameraSettings<T>) -> OrbitZoomCamera<T> {
         OrbitZoomCamera {
             target: target,
-            rotation: quaternion_id(),
+            rotation: quaternion::id(),
             distance: FromPrimitive::from_f32(10.0).unwrap(),
             pitch: Float::zero(),
             yaw: Float::zero(),
@@ -119,8 +119,8 @@ OrbitZoomCamera<T> {
     ///
     /// Return a Camera for the current OrbitZoomCamera configuration
     ///
-    pub fn camera(&self, dt: f64) -> Camera<T> {
-        let target_to_camera = rotate_vector(
+    pub fn camera(&self, _dt: f64) -> Camera<T> {
+        let target_to_camera = quaternion::rotate_vector(
             self.rotation, 
             [Float::zero(), Float::zero(), self.distance]
         );
@@ -144,8 +144,8 @@ OrbitZoomCamera<T> {
             let dx = dx * self.settings.pan_speed;
             let dy = dy * self.settings.pan_speed;
 
-            let right = rotate_vector(self.rotation, [_1, _0, _0]);
-            let up = rotate_vector(self.rotation, [_0, _1, _0]);
+            let right = quaternion::rotate_vector(self.rotation, [_1, _0, _0]);
+            let up = quaternion::rotate_vector(self.rotation, [_0, _1, _0]);
             self.target = vec3_add(
                 vec3_add(self.target, vec3_scale(up, dy)),
                 vec3_scale(right,dx)
@@ -165,8 +165,8 @@ OrbitZoomCamera<T> {
             self.yaw = self.yaw + dx;
             self.pitch = self.pitch + dy;
             self.rotation = quaternion::mul(
-                quaternion_from_axis_angle([_0, _1, _0], self.yaw),
-                quaternion_from_axis_angle([_1, _0, _0], self.pitch)
+                quaternion::axis_angle([_0, _1, _0], self.yaw),
+                quaternion::axis_angle([_1, _0, _0], self.pitch)
             );
 
         }
