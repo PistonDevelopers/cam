@@ -1,6 +1,6 @@
 #![crate_name = "cam"]
 #![deny(missing_docs)]
-#![feature(core, hash, std_misc)]
+#![feature(core, std_misc)]
 
 //! A library for 3D camera and navigation.
 

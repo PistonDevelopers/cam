@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 //!
 //! A 3dsMax / Blender style camera that orbits about a target position
 //!
@@ -5,7 +7,6 @@
 use event::GenericEvent;
 
 use std::num::{Float, FromPrimitive};
-use std::ops::Mul;
 use vecmath::{
     Vector3,
     vec3_add,
@@ -21,11 +22,13 @@ use input::Button::{Keyboard, Mouse};
 use input::keyboard::Key;
 use input::mouse::MouseButton;
 
-bitflags!(flags Keys: u8 {
-    const ZOOM  = 0b00000001,
-    const PAN   = 0b00000010,
-    const ORBIT = 0b00000100,
-});
+bitflags!(
+    flags Keys: u8 {
+        const ZOOM  = 0b00000001,
+        const PAN   = 0b00000010,
+        const ORBIT = 0b00000100,
+    }
+);
 
 ///
 /// Specifies key bindings and speed modifiers for OrbitZoomCamera
