@@ -5,9 +5,6 @@
 //! A library for 3D camera and navigation.
 
 #[macro_use]
-extern crate bitflags;
-extern crate event;
-extern crate input;
 extern crate vecmath;
 extern crate quaternion;
 
@@ -16,17 +13,5 @@ pub use camera::{
     CameraPerspective,
     model_view_projection,
 };
-pub use first_person::{
-    FirstPerson,
-    FirstPersonSettings,
-};
-
-pub use orbit_zoom_camera::{
-    OrbitZoomCamera,
-    OrbitZoomCameraSettings,
-};
 
 mod camera;
-mod first_person;
-mod orbit_zoom_camera;
-
