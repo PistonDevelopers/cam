@@ -118,7 +118,7 @@ CameraPerspective<T> {
         let _1: T = Float::one();
         let _2: T = _1 + _1;
         let pi: T = Radians::_180();
-        let _360: T = FromPrimitive::from_int(360).unwrap();
+        let _360: T = FromPrimitive::from_isize(360).unwrap();
         let f = _1 / (self.fov * (pi / _360)).tan();
         let (far, near) = (self.far_clip, self.near_clip);
         [
@@ -129,4 +129,3 @@ CameraPerspective<T> {
         ]
     }
 }
-
