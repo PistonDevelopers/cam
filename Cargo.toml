@@ -20,8 +20,8 @@ path = "src/lib.rs"
 
 [dependencies.vecmath]
 git = "https://github.com/pistondevelopers/vecmath"
-#version = "0.0.3"
+#version = "0.0.5"
 
 [dependencies.quaternion]
 git = "https://github.com/PistonDevelopers/quaternion.git"
-#version = "0.0.2"
+#version = "0.0.5"
