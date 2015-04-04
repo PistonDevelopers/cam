@@ -1,12 +1,11 @@
 #![crate_name = "cam"]
 #![deny(missing_docs)]
-#![feature(core, std_misc)]
 
 //! A library for 3D camera and navigation.
 
-#[macro_use]
 extern crate vecmath;
 extern crate quaternion;
+extern crate num;
 
 pub use camera::{
     Camera,
