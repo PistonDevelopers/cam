@@ -1,7 +1,7 @@
 
 //! A 3D camera.
 
-use std::num::{Float, FromPrimitive};
+use num::{ Float, FromPrimitive, Zero, One };
 use vecmath::{
     Vector3,
     Matrix4,
@@ -51,8 +51,8 @@ impl<T: Float + Copy> Camera<T> {
     ///
     /// Places the camera at [x, y, z], looking towards pozitive z.
     pub fn new(position: Vector3<T>) -> Camera<T> {
-        let _0 = Float::zero();
-        let _1 = Float::one();
+        let _0 = Zero::zero();
+        let _1 = One::one();
         Camera {
             position: position,
             right:   [_1, _0, _0],
@@ -69,12 +69,12 @@ impl<T: Float + Copy> Camera<T> {
         let r = self.right;
         let u = self.up;
         let f = self.forward;
-        let _0 = Float::zero();
+        let _0 = Zero::zero();
         [
             [r[0], u[0], f[0], _0],
             [r[1], u[1], f[1], _0],
             [r[2], u[2], f[2], _0],
-            [-vec3_dot(r, p), -vec3_dot(u, p), -vec3_dot(f, p), Float::one()]
+            [-vec3_dot(r, p), -vec3_dot(u, p), -vec3_dot(f, p), One::one()]
         ]
     }
 
@@ -96,8 +96,8 @@ impl<T: Float + Copy> Camera<T> {
     /// relative to the positive z-axis
     pub fn set_rotation(&mut self, rotation: Quaternion<T>)
     {
-        let _0: T = Float::zero();
-        let _1: T = Float::one();
+        let _0: T = Zero::zero();
+        let _1: T = One::one();
         let forward: Vector3<T> = [_0, _0, _1];
         let up: Vector3<T> = [_0, _1, _0];
         self.forward = rotate_vector(rotation, forward);
@@ -114,8 +114,8 @@ impl<T: Copy + Float + FromPrimitive + Radians>
 CameraPerspective<T> {
     /// Computes a projection matrix for the camera perspective.
     pub fn projection(&self) -> Matrix4<T> {
-        let _0: T = Float::zero();
-        let _1: T = Float::one();
+        let _0: T = Zero::zero();
+        let _1: T = One::one();
         let _2: T = _1 + _1;
         let pi: T = Radians::_180();
         let _360: T = FromPrimitive::from_isize(360).unwrap();
