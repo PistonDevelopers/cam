@@ -1,7 +1,7 @@
 [package]
 
 name = "piston3d-cam"
-version = "0.0.6"
+version = "0.0.7"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "eddyb"
@@ -25,6 +25,3 @@ git = "https://github.com/pistondevelopers/vecmath"
 [dependencies.quaternion]
 git = "https://github.com/PistonDevelopers/quaternion.git"
 #version = "0.0.5"
-
-[dependencies]
-num = "0.1.21"
