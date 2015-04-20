@@ -1,7 +1,6 @@
 
 //! A 3D camera.
 
-use num::{ Float, FromPrimitive, Zero, One };
 use vecmath::{
     Vector3,
     Matrix4,
@@ -10,7 +9,7 @@ use vecmath::{
     vec3_dot,
 };
 use vecmath::col_mat4_mul as mul;
-use vecmath::consts::Radians;
+use vecmath::traits::*;
 use quaternion::{Quaternion, rotate_vector};
 
 /// Computes a model view projection matrix.
@@ -110,15 +109,16 @@ impl<T: Float + Copy> Camera<T> {
     }
 }
 
-impl<T: Copy + Float + FromPrimitive + Radians>
-CameraPerspective<T> {
+impl<T: Float> CameraPerspective<T>
+    where f64: Cast<T>
+{
     /// Computes a projection matrix for the camera perspective.
     pub fn projection(&self) -> Matrix4<T> {
         let _0: T = Zero::zero();
         let _1: T = One::one();
         let _2: T = _1 + _1;
         let pi: T = Radians::_180();
-        let _360: T = FromPrimitive::from_isize(360).unwrap();
+        let _360: T = Cast::cast(360.0f64);
         let f = _1 / (self.fov * (pi / _360)).tan();
         let (far, near) = (self.far_clip, self.near_clip);
         [
