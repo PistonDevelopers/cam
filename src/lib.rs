@@ -5,7 +5,6 @@
 
 extern crate vecmath;
 extern crate quaternion;
-extern crate num;
 
 pub use camera::{
     Camera,
