@@ -1,7 +1,7 @@
 [package]
 
 name = "piston3d-cam"
-version = "0.0.8"
+version = "0.1.0"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "eddyb"
@@ -19,5 +19,5 @@ name = "cam"
 path = "src/lib.rs"
 
 [dependencies]
-vecmath = "0.0.23"
-quaternion = "0.0.7"
+vecmath = "0.1.0"
+quaternion = "0.1.0"
