@@ -22,6 +22,7 @@ pub fn model_view_projection<T: Float + Copy>(
 }
 
 /// Models a camera with position and directions.
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct Camera<T=f32> {
     /// The camera position.
     pub position: Vector3<T>,
@@ -34,6 +35,7 @@ pub struct Camera<T=f32> {
 }
 
 /// Models camera perspective settings.
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash)]
 pub struct CameraPerspective<T=f32> {
     /// Field of view (in degrees).
     pub fov: T,
