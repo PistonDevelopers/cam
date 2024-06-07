@@ -81,7 +81,7 @@ impl<T: Float + Copy> Camera<T> {
 
     /// Orients the camera to look at a point.
     pub fn look_at(&mut self, point: Vector3<T>) {
-        self.forward = vec3_normalized_sub(self.position, point);
+        self.forward = vec3_normalized_sub(point, self.position);
         self.update_right();
     }
 
